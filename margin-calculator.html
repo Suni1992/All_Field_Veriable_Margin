@@ -339,9 +339,6 @@ tbody tr:hover td { background: var(--teal-pale); }
     <button class="nav-item active" onclick="switchTab('calc'); setActive(this)">
       <span class="nav-icon">🧮</span> Margin Calculator
     </button>
-    <button class="nav-item" onclick="switchTab('backup'); setActive(this)">
-      <span class="nav-icon">📊</span> Backup Data
-    </button>
     <div class="nav-label">Info</div>
     <button class="nav-item">
       <span class="nav-icon">📋</span> All Vehicles
@@ -375,7 +372,6 @@ tbody tr:hover td { background: var(--teal-pale); }
     <!-- Tab pills -->
     <div class="tab-nav">
       <button class="tab-pill active" id="pill-calc" onclick="switchTab('calc')">🧮 Margin Calculator</button>
-      <button class="tab-pill" id="pill-backup" onclick="switchTab('backup')">📊 Backup Data</button>
     </div>
 
     <!-- ════════════════════════════════
@@ -529,47 +525,6 @@ tbody tr:hover td { background: var(--teal-pale); }
     </div><!-- end calcTab -->
 
 
-    <!-- ════════════════════════════════
-         BACKUP TAB
-    ════════════════════════════════ -->
-    <div id="backupTab" class="tab-content">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-icon icon-blue">📊</div>
-            Backup data — Google Sheets
-          </div>
-        </div>
-
-        <div class="sheet-tabs">
-          <button class="sheet-tab active" id="stab1" onclick="selectSheet(1)">Sheet 1 — Backup</button>
-          <button class="sheet-tab" id="stab2" onclick="selectSheet(2)">Sheet 2 — Inventory</button>
-        </div>
-
-        <div id="sheetConfig1">
-          <div class="url-bar">
-            <input type="text" id="url1" value="https://docs.google.com/spreadsheets/d/15JF-xpXOpBVEb3qlxNhyjcKUNbshIAa2wOItKAx9mmA/export?format=csv&gid=1846469763" placeholder="Google Sheets CSV export URL…"/>
-            <button class="fetch-btn" onclick="fetchSheet(1)">⬇ Fetch data</button>
-          </div>
-        </div>
-        <div id="sheetConfig2" style="display:none;">
-          <div class="url-bar">
-            <input type="text" id="url2" value="https://docs.google.com/spreadsheets/d/1R2xS35xTCcPHQbPhSSwAnBlBHgu6CH4Yi_Rt5IHQTgk/export?format=csv&gid=0" placeholder="Google Sheets CSV export URL…"/>
-            <button class="fetch-btn" onclick="fetchSheet(2)">⬇ Fetch data</button>
-          </div>
-        </div>
-
-        <p class="hint">⚠ Sheet must be shared as <strong>Anyone with the link → Viewer</strong>. Click "Use ↗" on any row to auto-fill the calculator.</p>
-        <div class="status" id="fetchStatus"></div>
-        <div id="backupTableWrap">
-          <div class="empty-state">
-            <div class="empty-icon">📭</div>
-            <p>Click "Fetch data" to load records from Google Sheets</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div><!-- end page -->
 </div><!-- end main -->
 </div><!-- end layout -->
@@ -672,17 +627,6 @@ function setActive(el) {
   el.classList.add('active');
 }
 
-// ── Sheet sub-tabs ──
-function selectSheet(n) {
-  document.getElementById('sheetConfig1').style.display = n===1 ? 'block' : 'none';
-  document.getElementById('sheetConfig2').style.display = n===2 ? 'block' : 'none';
-  document.getElementById('stab1').className = 'sheet-tab' + (n===1 ? ' active' : '');
-  document.getElementById('stab2').className = 'sheet-tab' + (n===2 ? ' active' : '');
-  document.getElementById('backupTableWrap').innerHTML =
-    '<div class="empty-state"><div class="empty-icon">📭</div><p>Click "Fetch data" to load records</p></div>';
-  document.getElementById('fetchStatus').textContent = '';
-}
-
 // ── CSV parser ──
 function parseCSV(text) {
   return text.split('\n').map(row => {
@@ -697,60 +641,7 @@ function parseCSV(text) {
   }).filter(r => r.some(c => c !== ''));
 }
 
-// ── Convert edit URL → CSV export URL ──
-function toCSVUrl(raw) {
-  if (raw.includes('export?format=csv')) return raw;
-  const idM  = raw.match(/\/d\/([a-zA-Z0-9-_]+)/);
-  const gidM = raw.match(/gid=(\d+)/);
-  if (!idM) throw new Error('Cannot extract Sheet ID from URL.');
-  return `https://docs.google.com/spreadsheets/d/${idM[1]}/export?format=csv` + (gidM ? `&gid=${gidM[1]}` : '');
-}
-
-// ── Fill calculator from backup row ──
-function fillFromRow(rowData, headers) {
-  const map = {
-    'vehicle number':'vehicleNum','vehicle no':'vehicleNum','reg no':'vehicleNum','registration':'vehicleNum',
-    'store':'storeName','store name':'storeName',
-    'make':'makeModel','model':'makeModel','make/model':'makeModel','make / model':'makeModel',
-    'variant':'variant','year':'year','colour':'colour','color':'colour',
-    'procurement':'procPrice','procurement price':'procPrice',
-    'auction fee':'auctionFee','auction':'auctionFee',
-    'transport':'transport','transport cost':'transport',
-    'insurance':'insurance',
-    'repair':'repair','refurb':'repair','repair/refurb':'repair','refurb cost':'repair',
-    'challan':'challan','challan amount':'challan',
-    'fitness':'fitness','fitness cost':'fitness',
-    'fitness penalty':'fitnessPenalty',
-    'rto':'rtoTransfer','rto transfer':'rtoTransfer',
-    'hypothecation':'hypothecation',
-    'parking':'parking','parking charges':'parking',
-    'tyre':'tyreCost','tyre cost':'tyreCost',
-    'dhaala':'dhaalaCost','dhaala cost':'dhaalaCost',
-    'other':'otherCosts','others':'otherCosts','other costs':'otherCosts',
-    'selling price':'sellingPrice','sell price':'sellingPrice','expected selling price':'sellingPrice',
-    'discount':'discount','dealer discount':'discount',
-    'gst':'gstRate','gst rate':'gstRate',
-    'tds':'tdsRate','tds rate':'tdsRate',
-  };
-  headers.forEach((h, i) => {
-    const key   = (h||'').toLowerCase().trim();
-    const field = map[key];
-    if (field && rowData[i] !== undefined) {
-      const el = document.getElementById(field);
-      if (el && !el.readOnly) {
-        const clean = rowData[i].replace(/[₹,\s]/g, '');
-        el.value = clean || rowData[i];
-      }
-    }
-  });
-  calc();
-  switchTab('calc');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 // ── Search vehicle in loaded data ──
-let loadedRows = [], loadedHeaders = [];
-
 function searchVehicle() {
   const query  = document.getElementById('searchInput').value.trim().toUpperCase();
   const status = document.getElementById('searchStatus');
@@ -814,61 +705,6 @@ function fillStructuredVehicle(rows) {
   calc();
 }
 
-// ── Render table ──
-function renderTable(rows, headers) {
-  const data = rows.slice(1);
-  let html = '<div class="table-wrap"><table><thead><tr><th>Use</th>';
-  headers.forEach(h => { html += `<th>${h||'—'}</th>`; });
-  html += '</tr></thead><tbody>';
-  data.forEach(row => {
-    const safeRow = JSON.stringify(row);
-    const safeH   = JSON.stringify(headers);
-    html += `<tr><td><button class="use-btn" onclick='fillFromRow(${safeRow.replace(/'/g,"&#39;")},${safeH.replace(/'/g,"&#39;")})'>Use ↗</button></td>`;
-    headers.forEach((h, i) => {
-      let val = row[i] || '';
-      if ((h||'').toLowerCase().includes('margin') && val.includes('%')) {
-        const num = parseFloat(val);
-        const cls = num >= 10 ? 'green' : num >= 0 ? 'amber' : 'red';
-        val = `<span class="pill ${cls}">${val}</span>`;
-      }
-      html += `<td>${val}</td>`;
-    });
-    html += '</tr>';
-  });
-  html += '</tbody></table></div>';
-  return html;
-}
-
-// ── Fetch Google Sheet ──
-async function fetchSheet(n) {
-  const statusEl = document.getElementById('fetchStatus');
-  const wrapEl   = document.getElementById('backupTableWrap');
-  const rawUrl   = document.getElementById('url' + n).value.trim();
-  if (!rawUrl) { statusEl.className='status err'; statusEl.textContent='Please enter a URL.'; return; }
-  let csvUrl;
-  try { csvUrl = toCSVUrl(rawUrl); }
-  catch(e) { statusEl.className='status err'; statusEl.textContent=e.message; return; }
-
-  statusEl.className='status loading'; statusEl.textContent='⏳ Fetching data…';
-  wrapEl.innerHTML = '';
-
-  try {
-    const res = await fetch(csvUrl);
-    if (!res.ok) throw new Error(`HTTP ${res.status} — Make sure the sheet is publicly shared.`);
-    const csv = await res.text();
-    const rows = parseCSV(csv);
-    if (!rows.length) { wrapEl.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><p>No data found.</p></div>'; return; }
-    loadedHeaders = rows[0];
-    loadedRows    = rows.slice(1);
-    statusEl.className='status ok';
-    statusEl.textContent=`✓ Loaded ${loadedRows.length} rows · ${loadedHeaders.length} columns`;
-    wrapEl.innerHTML = renderTable(rows, loadedHeaders);
-  } catch(err) {
-    statusEl.className='status err';
-    statusEl.textContent='✗ ' + err.message;
-    wrapEl.innerHTML='<div class="empty-state"><div class="empty-icon">⚠️</div><p>Could not load. Make sure the sheet is set to <strong>Anyone with the link → Viewer</strong></p></div>';
-  }
-}
 </script>
 </body>
 </html>
