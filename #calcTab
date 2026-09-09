@@ -1,0 +1,89 @@
+<!-- Vehicle Info -->
+<div class="card">
+  <h3>Vehicle information</h3>
+  <div class="grid">
+    <div class="field">
+      <label>Vehicle number</label>
+      <input type="text" id="vehicleNum" placeholder="DL-01-AB-0123" />
+    </div>
+    <div class="field">
+      <label>Store name</label>
+      <input type="text" id="storeName" placeholder="Delhi Hub" />
+    </div>
+    <div class="field">
+      <label>Make / Model</label>
+      <input type="text" id="makeModel" placeholder="Hyundai Creta" />
+    </div>
+    <div class="field">
+      <label>Variant</label>
+      <input type="text" id="variant" placeholder="SX Plus" />
+    </div>
+    <div class="field">
+      <label>Year</label>
+      <input type="number" id="year" placeholder="2021" />
+    </div>
+    <div class="field">
+      <label>Colour</label>
+      <input type="text" id="colour" placeholder="Pearl White" />
+    </div>
+  </div>
+</div>
+
+<!-- Cost Components -->
+<div class="card">
+  <h3>Cost components</h3>
+  <div class="grid">
+    <div class="field"><label>Procurement price</label><div class="inp-wrap"><span>₹</span><input type="number" id="procPrice" value="200000" /></div></div>
+    <div class="field"><label>Auction fee</label><div class="inp-wrap"><span>₹</span><input type="number" id="auctionFee" value="2000" /></div></div>
+    <div class="field"><label>Transport cost</label><div class="inp-wrap"><span>₹</span><input type="number" id="transport" value="3000" /></div></div>
+    <div class="field"><label>Insurance</label><div class="inp-wrap"><span>₹</span><input type="number" id="insurance" value="5000" /></div></div>
+    <div class="field"><label>Repair / refurb</label><div class="inp-wrap"><span>₹</span><input type="number" id="repair" value="8000" /></div></div>
+    <div class="field"><label>Challan amount</label><div class="inp-wrap"><span>₹</span><input type="number" id="challan" value="0" /></div></div>
+    <div class="field"><label>Fitness cost</label><div class="inp-wrap"><span>₹</span><input type="number" id="fitness" value="2000" /></div></div>
+    <div class="field"><label>Fitness penalty</label><div class="inp-wrap"><span>₹</span><input type="number" id="fitnessPenalty" value="0" /></div></div>
+    <div class="field"><label>RTO transfer</label><div class="inp-wrap"><span>₹</span><input type="number" id="rtoTransfer" value="3000" /></div></div>
+    <div class="field"><label>Hypothecation</label><div class="inp-wrap"><span>₹</span><input type="number" id="hypothecation" value="0" /></div></div>
+    <div class="field"><label>Parking charges</label><div class="inp-wrap"><span>₹</span><input type="number" id="parking" value="0" /></div></div>
+    <div class="field"><label>Other costs</label><div class="inp-wrap"><span>₹</span><input type="number" id="otherCosts" value="1000" /></div></div>
+  </div>
+</div>
+
+<!-- Pricing & Tax -->
+<div class="card">
+  <h3>Pricing & tax</h3>
+  <div class="grid">
+    <div class="field">
+      <label>Total landed cost (auto)</label>
+      <div class="inp-wrap"><span>₹</span><input type="number" id="landedCost" readonly /></div>
+    </div>
+    <div class="field">
+      <label>Expected selling price</label>
+      <div class="inp-wrap"><span>₹</span><input type="number" id="sellingPrice" value="280000" /></div>
+    </div>
+    <div class="field">
+      <label>Dealer discount</label>
+      <div class="inp-wrap"><span>₹</span><input type="number" id="discount" value="0" /></div>
+    </div>
+    <div class="field">
+      <label>GST rate</label>
+      <div class="inp-wrap"><input type="number" id="gstRate" value="18" /><span>%</span></div>
+    </div>
+    <div class="field">
+      <label>TDS rate</label>
+      <div class="inp-wrap"><input type="number" id="tdsRate" value="1" /><span>%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Results -->
+<div class="card results">
+  <h3>Margin analysis</h3>
+  <div class="grid">
+    <div class="metric"><p class="label">Total landed cost</p><p class="value" id="res_landed">₹0</p></div>
+    <div class="metric"><p class="label">Gross margin</p><p class="value" id="res_gross">₹0</p></div>
+    <div class="metric"><p class="label">GST amount</p><p class="value" id="res_gst">₹0</p></div>
+    <div class="metric"><p class="label">TDS deduction</p><p class="value" id="res_tds">₹0</p></div>
+    <div class="metric"><p class="label">Net margin</p><p class="value" id="res_net">₹0</p></div>
+    <div class="metric"><p class="label">Margin %</p><p class="value" id="res_pct">0.00%</p></div>
+  </div>
+</div>
