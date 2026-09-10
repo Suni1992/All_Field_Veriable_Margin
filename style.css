@@ -1,0 +1,83 @@
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: linear-gradient(135deg, #eef4f7 0%, #f8f7f3 48%, #edf3ee 100%); color: #17221f; padding: 1.5rem; }
+
+    /* Dashboard header */
+    .dashboard-header { max-width: 1100px; margin: 0 auto 1.25rem; }
+    .eyebrow { color: #17736a; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+    .dashboard-header h1 { font-size: 28px; font-weight: 650; letter-spacing: 0; }
+    .sheet-link { padding: 9px 14px; background: #2563eb; color: #fff; border-radius: 6px; font-size: 13px; text-decoration: none; white-space: nowrap; }
+    .sheet-link:hover { background: #1d4ed8; }
+    .tab-content { max-width: 1100px; margin: 0 auto; }
+
+    /* Vehicle search */
+    .vehicle-search { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(360px, 1.4fr); align-items: end; gap: 1rem 2rem; border-top: 3px solid #17736a; }
+    .vehicle-search h2 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .search-help { color: #60706b; font-size: 12px; }
+    .search-row { display: flex; align-items: end; gap: 8px; min-width: min(100%, 430px); }
+    .search-row label { display: block; position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .search-row input { flex: 1; min-width: 0; }
+    .search-row button { padding: 9px 15px; border: none; border-radius: 6px; background: #17736a; color: #fff; cursor: pointer; font-size: 13px; white-space: nowrap; }
+    .search-row button:hover { background: #125c55; }
+    .vehicle-search #searchStatus { grid-column: 2; min-height: 16px; margin-top: -8px; }
+
+    @media (max-width: 560px) {
+    .dashboard-header { align-items: flex-start; flex-direction: column; }
+    .vehicle-search { display: flex; align-items: stretch; flex-direction: column; gap: 1rem; }
+    .search-row { min-width: 0; }
+    .vehicle-search #searchStatus { margin-top: 0; }
+    }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 0.5rem; border-bottom: 1px solid #ddd; margin-bottom: 1.5rem; }
+    .tab-btn { padding: 8px 18px; border: none; background: none; cursor: pointer; font-size: 14px; color: #666; border-bottom: 2px solid transparent; }
+    .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 500; }
+
+    /* Cards */
+    .card { background: rgba(255, 255, 255, 0.92); border: 1px solid #dce5e1; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 8px 24px rgba(27, 54, 45, 0.05); }
+    .card h3 { font-size: 14px; font-weight: 650; margin-bottom: 1rem; color: #17221f; }
+
+    /* Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+
+    /* Fields */
+    .field label { display: block; font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+    .inp-wrap { display: flex; align-items: center; gap: 6px; }
+    .inp-wrap span { font-size: 13px; color: #999; }
+    input[type=text], input[type=number] {
+    width: 100%; padding: 7px 10px; border: 1px solid #ddd;
+    border-radius: 6px; font-size: 13px; background: #fff; color: #111;
+    }
+    input[readonly] { background: #f5f5f3; color: #888; }
+    input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+    /* Metric cards */
+    .metric { background: #f9f9f8; border: 1px solid #eee; border-radius: 8px; padding: 10px 14px; }
+    .metric .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+    .metric .value { font-size: 20px; font-weight: 500; }
+    .value.positive { color: #16a34a; }
+    .value.negative { color: #dc2626; }
+
+    /* Backup tab */
+    .url-row { display: flex; gap: 8px; margin-bottom: 0.5rem; }
+    .url-row input { flex: 1; }
+    .url-row button { padding: 7px 14px; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    .url-row button:hover { background: #1d4ed8; }
+    .hint { font-size: 11px; color: #999; margin-bottom: 1rem; }
+
+    /* Status messages */
+    .info    { color: #666; font-size: 12px; }
+    .success { color: #16a34a; font-size: 12px; }
+    .error   { color: #dc2626; font-size: 12px; }
+    .empty   { color: #999; text-align: center; padding: 2rem; font-size: 13px; }
+
+    /* Backup table */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 0.75rem; }
+    th { background: #f5f5f3; color: #666; font-weight: 500; padding: 8px 10px; border-bottom: 1px solid #ddd; white-space: nowrap; text-align: left; }
+    td { padding: 7px 10px; border-bottom: 1px solid #eee; white-space: nowrap; }
+    tr:hover td { background: #fafafa; }
+
+    /* Margin pills */
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+    .pill.green { background: #dcfce7; color: #16a34a; }
+    .pill.amber { background: #fef9c3; color: #a16207; }
+    .pill.red   { background: #fee2e2; color: #dc2626; }

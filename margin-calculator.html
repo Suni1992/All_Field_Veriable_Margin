@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Vehicle Margin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --teal: #0d9488;
+  --teal-dark: #0f766e;
+  --teal-light: #ccfbf1;
+  --teal-pale: #f0fdfa;
+  --blue: #3b82f6;
+  --blue-dark: #2563eb;
+  --green: #16a34a;
+  --green-bg: #dcfce7;
+  --red: #dc2626;
+  --red-bg: #fee2e2;
+  --amber: #d97706;
+  --amber-bg: #fef3c7;
+  --text: #0f172a;
+  --text2: #475569;
+  --text3: #94a3b8;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 13px;
+}
+
+/* ── Sidebar ── */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 220px;
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; height: 100vh;
+  z-index: 200; padding: 0;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+}
+
+.sidebar-logo {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-logo .logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--teal), #06b6d4);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(13,148,136,0.4);
+}
+.sidebar-logo h2 { font-size: 13px; font-weight: 600; color: #fff; line-height: 1.3; }
+.sidebar-logo p  { font-size: 10px; color: #64748b; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.sidebar-nav { padding: 12px 10px; flex: 1; }
+.nav-label { font-size: 9px; color: #475569; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 10px; margin: 16px 0 6px; }
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 10px; border-radius: 8px; cursor: pointer;
+  color: #94a3b8; font-size: 12.5px; font-weight: 500;
+  transition: all 0.15s; border: none; background: none;
+  width: 100%; text-align: left; font-family: 'Inter', sans-serif;
+}
+.nav-item:hover { background: rgba(255,255,255,0.06); color: #e2e8f0; }
+.nav-item.active { background: rgba(13,148,136,0.2); color: #2dd4bf; }
+.nav-item .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+
+.sidebar-bottom {
+  padding: 14px 10px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ── Main content ── */
+.main { margin-left: 220px; flex: 1; display: flex; flex-direction: column; }
+
+/* ── Top bar ── */
+.topbar {
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 0 2rem; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 1px 0 var(--border);
+}
+.topbar-left { display: flex; flex-direction: column; gap: 1px; }
+.topbar-eyebrow { font-size: 10px; color: var(--teal); font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; }
+.topbar-title { font-size: 17px; font-weight: 700; color: var(--text); }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.topbar-badge {
+  background: var(--teal-pale); border: 1px solid var(--teal-light);
+  color: var(--teal-dark); font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 20px;
+}
+
+/* ── Page ── */
+.page { padding: 1.5rem 2rem 3rem; }
+
+/* ── Search bar ── */
+.search-card {
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #06b6d4 100%);
+  border-radius: var(--radius); padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 20px rgba(13,148,136,0.3);
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+}
+.search-card-left h2 { font-size: 15px; font-weight: 600; color: #fff; }
+.search-card-left p  { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.search-row { display: flex; gap: 8px; align-items: center; flex: 1; max-width: 480px; }
+.search-row input {
+  flex: 1; padding: 9px 14px; border-radius: 8px;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.15);
+  color: #fff; font-size: 13px; font-family: 'Inter', sans-serif;
+  backdrop-filter: blur(8px); outline: none;
+  transition: border-color 0.2s;
+}
+.search-row input::placeholder { color: rgba(255,255,255,0.6); }
+.search-row input:focus { border-color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.2); }
+.search-btn {
+  padding: 9px 18px; border-radius: 8px; border: none;
+  background: #fff; color: var(--teal-dark);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s; white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.search-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+#searchStatus { font-size: 12px; color: rgba(255,255,255,0.85); margin-top: 6px; min-height: 16px; }
+
+/* ── Section cards ── */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem; box-shadow: var(--shadow);
+}
+.card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.1rem; padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+.card-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; color: var(--text);
+}
+.card-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.icon-teal   { background: var(--teal-light); }
+.icon-blue   { background: #dbeafe; }
+.icon-purple { background: #ede9fe; }
+.icon-amber  { background: var(--amber-bg); }
+
+/* ── Field grid ── */
+.grid  { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; }
+.grid3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label {
+  font-size: 10px; color: var(--text3); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.inp-wrap { display: flex; align-items: stretch; border-radius: var(--radius-sm); overflow: hidden; border: 1.5px solid var(--border); transition: border-color 0.15s; }
+.inp-wrap:focus-within { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.12); }
+.inp-prefix, .inp-suffix {
+  background: #f8fafc; color: var(--text3); font-size: 12px;
+  padding: 7px 9px; display: flex; align-items: center; font-weight: 500;
+  border: none;
+}
+.inp-prefix { border-right: 1.5px solid var(--border); }
+.inp-suffix { border-left:  1.5px solid var(--border); }
+input[type=text], input[type=number] {
+  flex: 1; border: none; outline: none; padding: 7px 10px;
+  font-size: 13px; font-family: 'Inter', sans-serif;
+  background: #fff; color: var(--text); width: 100%;
+}
+input[readonly] { background: #f8fafc; color: var(--text2); }
+
+/* ── Metric cards ── */
+.metrics { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px; }
+
+.metric {
+  border-radius: var(--radius-sm); padding: 14px 16px;
+  border: 1.5px solid var(--border);
+  background: #fafbfc;
+  position: relative; overflow: hidden;
+}
+.metric::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%; background: var(--border2);
+  border-radius: 3px 0 0 3px;
+}
+.metric.pos::before { background: var(--green); }
+.metric.neg::before { background: var(--red); }
+.metric.accent::before { background: var(--teal); }
+.metric.blue::before { background: var(--blue); }
+
+.metric-label { font-size: 10px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.metric-value { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+.metric-value.pos { color: var(--green); }
+.metric-value.neg { color: var(--red); }
+.metric-value.accent { color: var(--teal-dark); }
+.metric-sub { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+.metric.big {
+  background: linear-gradient(135deg, var(--teal-pale), #f0f9ff);
+  border-color: var(--teal-light);
+}
+.metric.big .metric-value { font-size: 26px; }
+
+/* ── Reset button ── */
+.btn-reset {
+  padding: 6px 14px; border-radius: 6px; border: 1.5px solid var(--border);
+  background: #fff; color: var(--text2); font-size: 12px; font-weight: 500;
+  cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.15s;
+}
+.btn-reset:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+
+/* ── Tabs (inside page) ── */
+.tab-nav {
+  display: flex; gap: 4px; margin-bottom: 1.25rem;
+  background: var(--card); border: 1px solid var(--border);
+  padding: 4px; border-radius: var(--radius); box-shadow: var(--shadow);
+  width: fit-content;
+}
+.tab-pill {
+  padding: 7px 18px; border-radius: 8px; border: none;
+  background: none; cursor: pointer; font-size: 13px;
+  font-family: 'Inter', sans-serif; font-weight: 500;
+  color: var(--text2); transition: all 0.15s;
+}
+.tab-pill.active { background: var(--teal); color: #fff; box-shadow: 0 2px 8px rgba(13,148,136,0.3); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── Backup tab ── */
+.url-bar { display: flex; gap: 8px; margin-bottom: 6px; }
+.url-bar input {
+  flex: 1; padding: 8px 12px; border-radius: 8px;
+  border: 1.5px solid var(--border); font-size: 13px;
+  font-family: 'Inter', sans-serif; outline: none;
+}
+.url-bar input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
+.fetch-btn {
+  padding: 8px 16px; background: var(--teal); color: #fff;
+  border: none; border-radius: 8px; cursor: pointer;
+  font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
+  transition: all 0.15s; white-space: nowrap;
+}
+.fetch-btn:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+.hint { font-size: 11px; color: var(--text3); margin-bottom: 1rem; }
+.status { font-size: 12px; margin-bottom: 0.75rem; min-height: 18px; font-weight: 500; }
+.status.ok  { color: var(--green); }
+.status.err { color: var(--red); }
+.status.loading { color: var(--text3); }
+
+/* ── Table ── */
+.table-wrap { overflow-x: auto; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead { background: linear-gradient(90deg, #f8fafc, #f1f5f9); }
+th {
+  padding: 10px 12px; color: var(--text2); font-weight: 600;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+  border-bottom: 1.5px solid var(--border); white-space: nowrap; text-align: left;
+}
+td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; color: var(--text); white-space: nowrap; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--teal-pale); }
+
+.pill { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.pill.green { background: var(--green-bg); color: var(--green); }
+.pill.red   { background: var(--red-bg);   color: var(--red); }
+.pill.amber { background: var(--amber-bg); color: var(--amber); }
+
+.use-btn {
+  padding: 3px 10px; border-radius: 6px; border: 1.5px solid var(--teal-light);
+  background: var(--teal-pale); color: var(--teal-dark);
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.15s;
+}
+.use-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); }
+
+.empty-state { text-align: center; padding: 3.5rem 1rem; color: var(--text3); }
+.empty-icon  { font-size: 36px; margin-bottom: 10px; opacity: 0.5; }
+.empty-state p { font-size: 13px; }
+
+/* ── Sheet sub-tabs ── */
+.sheet-tabs { display: flex; gap: 6px; margin-bottom: 1rem; }
+.sheet-tab {
+  padding: 5px 16px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: #fff;
+  color: var(--text2); cursor: pointer; font-size: 12px;
+  font-weight: 500; font-family: 'Inter', sans-serif; transition: all 0.15s;
+}
+.sheet-tab.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .page { padding: 1rem; }
+  .search-card { flex-direction: column; align-items: stretch; }
+  .search-row { max-width: 100%; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🚗</div>
+    <h2>Vehicle Ops</h2>
+    <p>Margin Dashboard</p>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Main</div>
+    <button class="nav-item active" onclick="switchTab('calc'); setActive(this)">
+      <span class="nav-icon">🧮</span> Margin Calculator
+    </button>
+    <div class="nav-label">Info</div>
+    <button class="nav-item">
+      <span class="nav-icon">📋</span> All Vehicles
+    </button>
+    <button class="nav-item">
+      <span class="nav-icon">📈</span> Reports
+    </button>
+  </nav>
+  <div class="sidebar-bottom">
+    <button class="nav-item" style="width:100%">
+      <span class="nav-icon">⚙️</span> Settings
+    </button>
+  </div>
+</aside>
+
+<!-- ── Main ── -->
+<div class="main">
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-eyebrow">Vehicle Operations</div>
+      <div class="topbar-title">Margin Dashboard</div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-badge">v2.0</span>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- Tab pills -->
+    <div class="tab-nav">
+      <button class="tab-pill active" id="pill-calc" onclick="switchTab('calc')">🧮 Margin Calculator</button>
+    </div>
+
+    <!-- ════════════════════════════════
+         CALCULATOR TAB
+    ════════════════════════════════ -->
+    <div id="calcTab" class="tab-content active">
+
+      <!-- Search -->
+      <div class="search-card">
+        <div class="search-card-left">
+          <h2>🔍 Find a vehicle</h2>
+          <p>Load vehicle costs and test price changes instantly.</p>
+          <div id="searchStatus"></div>
+        </div>
+        <div class="search-row">
+          <input type="text" id="searchInput" placeholder="Enter vehicle number e.g. DL1LAH2647"/>
+          <button class="search-btn" onclick="searchVehicle()">Search vehicle</button>
+        </div>
+      </div>
+
+      <!-- Vehicle Info -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon icon-teal">🚗</div>
+            Vehicle information
+          </div>
+        </div>
+        <div class="grid3">
+          <div class="field"><label>Vehicle number</label><div class="inp-wrap"><input type="text" id="vehicleNum" placeholder="DL-01-AB-0123"/></div></div>
+          <div class="field"><label>Store name</label><div class="inp-wrap"><input type="text" id="storeName" placeholder="Delhi Hub"/></div></div>
+          <div class="field"><label>Make / Model</label><div class="inp-wrap"><input type="text" id="makeModel" placeholder="Hyundai Creta"/></div></div>
+          <div class="field"><label>Variant</label><div class="inp-wrap"><input type="text" id="variant" placeholder="SX Plus"/></div></div>
+          <div class="field"><label>Year</label><div class="inp-wrap"><input type="number" id="year" placeholder="2021"/></div></div>
+          <div class="field"><label>Colour</label><div class="inp-wrap"><input type="text" id="colour" placeholder="Pearl White"/></div></div>
+        </div>
+      </div>
+
+      <!-- Cost Components -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon icon-amber">🧾</div>
+            Cost components
+          </div>
+          <span style="font-size:11px;color:var(--text3);font-weight:500;">All fields editable</span>
+        </div>
+        <div class="grid">
+          <div class="field"><label>Procurement price</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="procPrice" value="375000"/></div></div>
+          <div class="field"><label>Insurance</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="insurance" value="21002"/></div></div>
+          <div class="field"><label>Challan amount</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="challan" value="20000"/></div></div>
+          <div class="field"><label>Fitness cost</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="fitness" value="10000"/></div></div>
+          <div class="field"><label>Fitness penalty</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="fitnessPenalty" value="0"/></div></div>
+          <div class="field"><label>RTO transfer</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="rtoTransfer" value="8000"/></div></div>
+          <div class="field"><label>Tyre cost</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="tyreCost" value="10000"/></div></div>
+          <div class="field"><label>Dhaala cost</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="dhaalaCost" value="20000"/></div></div>
+          <div class="field"><label>Refurb cost</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="repair" value="18000"/></div></div>
+          <div class="field"><label>Auction fee</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="auctionFee" value="2000"/></div></div>
+          <div class="field"><label>Transport cost</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="transport" value="3000"/></div></div>
+          <div class="field"><label>Hypothecation</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="hypothecation" value="0"/></div></div>
+          <div class="field"><label>Parking charges</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="parking" value="5000"/></div></div>
+          <div class="field"><label>Other costs</label><div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="otherCosts" value="1000"/></div></div>
+        </div>
+      </div>
+
+      <!-- Pricing & Tax -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon icon-blue">🏷️</div>
+            Pricing & tax
+          </div>
+        </div>
+        <div class="grid">
+          <div class="field">
+            <label>Total landed cost (auto)</label>
+            <div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="landedCost" readonly/></div>
+          </div>
+          <div class="field">
+            <label>Expected selling price</label>
+            <div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="sellingPrice" value="620000"/></div>
+          </div>
+          <div class="field">
+            <label>Dealer discount</label>
+            <div class="inp-wrap"><span class="inp-prefix">₹</span><input type="number" id="discount" value="0"/></div>
+          </div>
+          <div class="field">
+            <label>GST rate</label>
+            <div class="inp-wrap"><input type="number" id="gstRate" value="18" style="border-radius:0;"/><span class="inp-suffix">%</span></div>
+          </div>
+          <div class="field">
+            <label>TDS rate</label>
+            <div class="inp-wrap"><input type="number" id="tdsRate" value="1" style="border-radius:0;"/><span class="inp-suffix">%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Margin Analysis -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-icon icon-purple">📈</div>
+            Margin analysis
+          </div>
+          <button class="btn-reset" onclick="resetCalc()">↺ Reset</button>
+        </div>
+        <div class="metrics">
+          <div class="metric blue">
+            <div class="metric-label">Total landed cost</div>
+            <div class="metric-value" id="res_landed">₹0</div>
+            <div class="metric-sub">Sum of all costs</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Effective sell price</div>
+            <div class="metric-value" id="res_sell">₹0</div>
+            <div class="metric-sub">After discount</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Gross margin</div>
+            <div class="metric-value" id="res_gross">₹0</div>
+            <div class="metric-sub">Before taxes</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">GST amount</div>
+            <div class="metric-value" id="res_gst">₹0</div>
+            <div class="metric-sub">On sell price</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">TDS deduction</div>
+            <div class="metric-value" id="res_tds">₹0</div>
+            <div class="metric-sub">On sell price</div>
+          </div>
+          <div class="metric big accent">
+            <div class="metric-label">Net margin</div>
+            <div class="metric-value accent" id="res_net">₹0</div>
+            <div class="metric-sub">After all deductions</div>
+          </div>
+          <div class="metric big accent">
+            <div class="metric-label">Margin %</div>
+            <div class="metric-value accent" id="res_pct">0.00%</div>
+            <div class="metric-sub">Net / landed cost</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Break-even price</div>
+            <div class="metric-value" id="res_bep">₹0</div>
+            <div class="metric-sub">Min to break even</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end calcTab -->
+
+
+  </div><!-- end page -->
+</div><!-- end main -->
+</div><!-- end layout -->
+
+<script>
+const COST_IDS = [
+  'procPrice','insurance','challan','fitness','fitnessPenalty','rtoTransfer',
+  'tyreCost','dhaalaCost','repair','auctionFee','transport','hypothecation','parking','otherCosts'
+];
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/15JF-xpXOpBVEb3qlxNhyjcKUNbshIAa2wOItKAx9mmA/export?format=csv&gid=1846469763';
+const BACKUP_CSV_URL = 'https://docs.google.com/spreadsheets/d/15JF-xpXOpBVEb3qlxNhyjcKUNbshIAa2wOItKAx9mmA/gviz/tq?tqx=out:csv&sheet=Backup';
+let loadedLandedCost = null;
+let loadedCostValues = null;
+let lastCalculatorVehicle = '';
+
+function fmtINR(n) {
+  if (isNaN(n)) return '₹0';
+  return '₹' + Math.abs(Math.round(n)).toLocaleString('en-IN');
+}
+function v(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
+function set(id, val) { const el = document.getElementById(id); if(el) el.textContent = val; }
+
+function calc() {
+  const calculatedLanded = COST_IDS.reduce((s, id) => s + v(id), 0);
+  const editedLanded = loadedCostValues === null
+    ? calculatedLanded
+    : loadedLandedCost + COST_IDS.reduce((change, id) => change + v(id) - loadedCostValues[id], 0);
+  const landed = loadedLandedCost === null ? calculatedLanded : editedLanded;
+  document.getElementById('landedCost').value = Math.round(landed);
+
+  const sell    = v('sellingPrice');
+  const disc    = v('discount');
+  const gstRate = v('gstRate');
+  const tdsRate = v('tdsRate');
+
+  const effSell = sell - disc;
+  const gross   = effSell - landed;
+  const resaleMargin = Math.max(effSell - v('procPrice'), 0);
+  const gstAmt  = resaleMargin * (gstRate / (100 + gstRate));
+  const tdsAmt  = effSell * (tdsRate / 100);
+  const net     = gross - gstAmt;
+  const pctBase = effSell - gstAmt;
+  const pct     = pctBase > 0 ? (net / pctBase) * 100 : 0;
+  const bep     = landed + gstAmt;
+
+  set('res_landed', fmtINR(landed));
+  set('res_sell',   fmtINR(effSell));
+  set('res_gross',  fmtINR(gross));
+  set('res_gst',    fmtINR(gstAmt));
+  set('res_tds',    fmtINR(tdsAmt));
+  set('res_bep',    fmtINR(bep));
+
+  const netEl = document.getElementById('res_net');
+  const pctEl = document.getElementById('res_pct');
+  const netCard = netEl.closest('.metric');
+  const pctCard = pctEl.closest('.metric');
+
+  netEl.textContent = (net < 0 ? '−' : '') + fmtINR(net);
+  netEl.className   = 'metric-value accent ' + (net < 0 ? 'neg' : '');
+  pctEl.textContent = pct.toFixed(1) + '%';
+  pctEl.className   = 'metric-value accent ' + (pct < 0 ? 'neg' : '');
+}
+
+function resetCalc() {
+  loadedLandedCost = null;
+  loadedCostValues = null;
+  COST_IDS.forEach(id => { const el = document.getElementById(id); if(el) el.value = 0; });
+  ['vehicleNum','storeName','makeModel','variant','year','colour'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  document.getElementById('sellingPrice').value = 0;
+  document.getElementById('discount').value     = 0;
+  document.getElementById('gstRate').value      = 18;
+  document.getElementById('tdsRate').value      = 1;
+  document.getElementById('searchStatus').textContent = '';
+  calc();
+}
+
+function restoreInitialValues() {
+  loadedLandedCost = null;
+  loadedCostValues = null;
+  document.querySelectorAll('input').forEach(el => { el.value = el.defaultValue; });
+  document.getElementById('searchStatus').textContent = '';
+  calc();
+}
+
+document.querySelectorAll('input:not([readonly])').forEach(el => {
+  el.addEventListener('input', calc);
+});
+window.addEventListener('pageshow', restoreInitialValues);
+restoreInitialValues();
+
+// ── Tab switching ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(tab + 'Tab').classList.add('active');
+  document.querySelectorAll('.tab-pill').forEach(el => el.classList.remove('active'));
+  document.getElementById('pill-' + tab).classList.add('active');
+}
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── CSV parser ──
+function parseCSV(text) {
+  return text.split('\n').map(row => {
+    const cells = []; let cur = '', inQ = false;
+    for (let i = 0; i < row.length; i++) {
+      if (row[i] === '"') { inQ = !inQ; }
+      else if (row[i] === ',' && !inQ) { cells.push(cur.trim()); cur = ''; }
+      else cur += row[i];
+    }
+    cells.push(cur.trim());
+    return cells;
+  }).filter(r => r.some(c => c !== ''));
+}
+
+// ── Search vehicle in loaded data ──
+async function fetchCsv(url) {
+  const response = await fetch(`${url}&_=${Date.now()}`, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`Google Sheet returned HTTP ${response.status}.`);
+  return parseCSV(await response.text());
+}
+
+async function syncCalculatorSheet(showStatus = false) {
+  const rows = await fetchCsv(SHEET_CSV_URL);
+  const selectedVehicle = structuredValue(rows, 'Paste Vehicle Number:');
+  if (!selectedVehicle || normalize(selectedVehicle) === normalize(lastCalculatorVehicle)) return selectedVehicle;
+
+  fillStructuredVehicle(rows);
+  lastCalculatorVehicle = selectedVehicle;
+  if (showStatus) {
+    document.getElementById('searchStatus').textContent = `Loaded vehicle ${selectedVehicle}. Edit any cost or price to see the revised margin.`;
+  }
+  return selectedVehicle;
+}
+
+async function searchVehicle() {
+  const query  = document.getElementById('searchInput').value.trim().toUpperCase();
+  const status = document.getElementById('searchStatus');
+  if (!query) { status.textContent = 'Enter a vehicle number to search.'; return; }
+  status.textContent = 'Loading vehicle data...';
+  try {
+    const backupRows = await fetchCsv(BACKUP_CSV_URL);
+    const headers = backupRows[0] || [];
+    const vehicleIndex = headers.findIndex(header => normalize(header) === 'registrationnumber');
+    const match = vehicleIndex >= 0 && backupRows.slice(1).some(row => normalize(row[vehicleIndex]) === normalize(query));
+    if (!match) throw new Error(`No vehicle found matching "${query}".`);
+
+    const selectedVehicle = await syncCalculatorSheet();
+    if (normalize(selectedVehicle) !== normalize(query)) {
+      status.textContent = `Vehicle found. Paste ${query} into Calculator Sheet cell B4, then wait for the calculator to refresh.`;
+      return;
+    }
+    status.textContent = `Loaded vehicle ${document.getElementById('vehicleNum').value}. Edit any cost or price to see the revised margin.`;
+  } catch (error) {
+    status.textContent = `Could not load vehicle data: ${error.message}`;
+  }
+}
+document.getElementById('searchInput').addEventListener('keydown', e => { if(e.key==='Enter') searchVehicle(); });
+
+syncCalculatorSheet().catch(() => {});
+setInterval(() => {
+  syncCalculatorSheet().catch(() => {});
+}, 10000);
+
+function normalize(value) {
+  return String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function structuredValue(rows, label, index = null) {
+  const row = rows.find(candidate => normalize(candidate[0]) === normalize(label));
+  if (!row) return '';
+  return index !== null ? row[index] || '' : row[4] || row[2] || row[1] || '';
+}
+
+function numericValue(value) {
+  const parsed = parseFloat(String(value || '').replace(/[^0-9.-]/g, ''));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function setInput(id, value) {
+  const element = document.getElementById(id);
+  if (element && value !== '') element.value = numericValue(value);
+}
+
+function fillStructuredVehicle(rows) {
+  document.getElementById('vehicleNum').value = structuredValue(rows, 'Paste Vehicle Number:');
+  document.getElementById('storeName').value = structuredValue(rows, 'Store Name');
+  document.getElementById('makeModel').value = structuredValue(rows, 'Make / Model');
+  document.getElementById('variant').value = structuredValue(rows, 'Model Variant');
+
+  const costMap = {
+    procPrice: 'Procurement Price', insurance: 'Pro_Insurance_Amount',
+    challan: 'Challan Amount', fitness: 'Fitness Amount',
+    fitnessPenalty: 'Fitness Penalty Amount', rtoTransfer: 'RTO Transfer Cost',
+    tyreCost: 'Tyre Cost', dhaalaCost: 'Dhaala Cost', repair: 'Refurb Cost',
+    auctionFee: 'Platform Fee', parking: 'Parking Charges Till Auction Date',
+    otherCosts: 'Other Expense'
+  };
+  Object.entries(costMap).forEach(([id, label]) => setInput(id, structuredValue(rows, label)));
+  setInput('sellingPrice', structuredValue(rows, 'Expected Selling Price To Customer'));
+
+  loadedLandedCost = numericValue(structuredValue(rows, 'Total Landed Cost (New)', 2));
+  loadedCostValues = Object.fromEntries(COST_IDS.map(id => [id, v(id)]));
+  calc();
+}
+
+</script>
+</body>
+</html>
